@@ -1,0 +1,52 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/styles.css">
+    <script src="static/js/onLoad.js" type="module"></script>
+    <title>Water Model Schematic</title>
+</head>
+<body>
+    <div id="navbar">
+        <div class="nav-border">
+            <label for="fileInput" class="nav-btn">Choose File</label>
+            <input type="file" id="fileInput" accept=".inp">
+            <button id="printBtn"  class="nav-btn">Print Schematic</button>
+        </div>
+        <div class="nav-border">
+            <div class="nav-row">
+                <label for="elev-int">Elevation Interval</label>
+                <input id="elev-int" class="num-inp" type="number" value="50">
+            </div>
+            <div class="nav-row">
+                <label for="num-zones">Number of Zones</label>
+                <input id="num-zones" class="num-inp" type="number" value="2">
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div id="white-rectangle">
+            <div id="boarder">
+                <div id="screen">
+                    <div id="elevations"></div>
+                    <div id="main-window"></div>
+                </div>
+                <div id="footer">
+                    <div id="logo"></div>
+                    <div id="left-titleblock" class="title">
+                        <input id="left-top-title" class="title-text" type="text" value="TITLE 1">
+                        <input id="left-bottom-title" class="title-text" type="text" value="TITLE 2">
+                    </div>
+                    <div id="right-titleblock" class="title">
+                        <input id="right-top-title" class="title-text" type="text" value="TITLE 3">
+                        <input id="lright-bottom-title" class="title-text" type="text" value="TITLE 4">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
