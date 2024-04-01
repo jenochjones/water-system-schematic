@@ -1,4 +1,47 @@
+let assignZones = function (modelDict) {
+    debugger
+    // Initialize an adjacency list to represent the graph
+    const adjacencyList = {};
 
+    // Populate adjacency list
+    pipes.forEach(pipe => {
+        const [pipeId, startNodeId, endNodeId] = pipe;
+        if (!adjacencyList[startNodeId]) adjacencyList[startNodeId] = [];
+        if (!adjacencyList[endNodeId]) adjacencyList[endNodeId] = [];
+        adjacencyList[startNodeId].push(endNodeId);
+        adjacencyList[endNodeId].push(startNodeId); // Assuming pipes are bidirectional
+    });
+
+    // Initialize visited nodes and result array
+    const visited = {};
+    const groups = [];
+
+    // Define DFS function
+    function dfs(node, group) {
+        visited[node] = true;
+        group.push(node);
+        if (adjacencyList[node]) {
+            adjacencyList[node].forEach(neighbor => {
+                if (!visited[neighbor]) {
+                    dfs(neighbor, group);
+                }
+            });
+        }
+    }
+
+    // Perform DFS for each unvisited node
+    nodes.forEach(node => {
+        if (!visited[node]) {
+            const group = [];
+            dfs(node, group);
+            groups.push(group);
+        }
+    });
+
+    return groups;
+}
+
+/*
 let assignZones = function (modelDict) {
     console.log(modelDict)
     debugger
@@ -22,7 +65,7 @@ let assignZones = function (modelDict) {
 
     const IDS = [...tankIDS.map(row => `tank_${row}`), ...resIDS.map(row => `res_${row}`), ...valveIDS.map(row => `valve_${row}`)]
     const heads = [...tankHeads, ...resHeads, ...valveHeads];
-}
+}*/
 
 let getMinMax = function (modelDict) {
 
