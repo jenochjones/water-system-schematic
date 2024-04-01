@@ -1,6 +1,57 @@
+let getMinElevation = function (idsWithElevation, targetIds) {
+    let minElevation = Number.POSITIVE_INFINITY;
+
+    // Iterate through the IDs with elevation
+    for (let i = 0; i < idsWithElevation.length; i++) {
+        const id = idsWithElevation[i][0]; // ID is in the first column
+        const elevation = idsWithElevation[i][1]; // Elevation is in the second column
+
+        // Check if the current ID is in the target IDs
+        if (targetIds.includes(id)) {
+            // Update min elevation if the current elevation is smaller
+            if (elevation < minElevation) {
+                minElevation = elevation;
+            }
+        }
+    }
+
+    return minElevation;
+}
+
+let getMaxElevation = function (idsWithElevation, targetIds) {
+    let maxElevation = Number.NEGATIVE_INFINITY;
+
+    // Iterate through the IDs with elevation
+    for (let i = 0; i < idsWithElevation.length; i++) {
+        const id = idsWithElevation[i][0]; // ID is in the first column
+        const elevation = idsWithElevation[i][1]; // Elevation is in the second column
+
+        // Check if the current ID is in the target IDs
+        if (targetIds.includes(id)) {
+            // Update max elevation if the current elevation is greater
+            if (elevation > maxElevation) {
+                maxElevation = elevation;
+            }
+        }
+    }
+
+    return maxElevation;
+}
+
 let assignZones = function (modelDict) {
-    debugger
+    
     // Initialize an adjacency list to represent the graph
+    //let reservoirs = modelDict['RESERVOIRS'].data.map(row => [row[0]]);
+    //let pumps = modelDict['PUMPS'].data.map(row => [row[0]]);
+    //let tanks = modelDict['TANKS'].data.map(row => [row[0]]);
+    //let valves = modelDict['VALVES'].data.map(row => [row[0]]);
+    let nodes = modelDict['JUNCTIONS'].data.map(row => [row[0]]);
+    //let nodes = [...juncts, ...tanks, ...reservoirs];
+    let pipes = modelDict['PIPES'].data.map(row => row.slice(0, 3));
+    //pipes = [...pipes, ...pumps];//, ...valves];
+
+    let zones = {};
+
     const adjacencyList = {};
 
     // Populate adjacency list
@@ -34,11 +85,26 @@ let assignZones = function (modelDict) {
         if (!visited[node]) {
             const group = [];
             dfs(node, group);
-            groups.push(group);
+            if (group.length > 5) { // Only add groups with more than 5 elements
+                groups.push(group);
+            }
         }
     });
 
-    return groups;
+    let counter = 1;
+    
+    groups.forEach(group => {
+        zones[`Zone ${counter}`] = {};
+        zones[`Zone ${counter}`]['JUNCTIONS'] = group;
+        let maxElev = getMaxElevation(modelDict['JUNCTIONS'].data.map(row => [row[0], row[1]]), group);
+        let minElev = getMinElevation(modelDict['JUNCTIONS'].data.map(row => [row[0], row[1]]), group);
+        zones[`Zone ${counter}`]['MaxElev'] = maxElev;
+        zones[`Zone ${counter}`]['MinElev'] = minElev;
+        counter++;
+    });
+
+    debugger
+    return zones;
 }
 
 /*
