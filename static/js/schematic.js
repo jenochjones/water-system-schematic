@@ -1,3 +1,33 @@
+let drawZones = function (zones) {
+    debugger
+    let numZones = Object.keys(zones).length;
+    let zoneWidth = 100 / numZones - 5;
+    let zoneHeight = 80;
+    let x = 2.5;
+
+    const mainWindow = document.getElementById('main-window');
+
+    for (let zone in zones) {
+        console.log(zone);
+        //let html = `<div class='zone' style='left: ${x}%; bottom: 10%; width: ${zoneWidth}; height: ${zoneHeight}'>${zone}</div>`;
+        
+        const newDiv = document.createElement('div');
+
+        // Set class and inline styles
+        newDiv.classList.add('zone');
+        newDiv.style.left = `${x}%`;
+        newDiv.style.bottom = '10%';
+        newDiv.style.width = `${zoneWidth}%`;
+        newDiv.style.height = `${zoneHeight}%`;
+
+        // Set innerHTML to zone
+        newDiv.textContent = zone;
+
+        mainWindow.appendChild(newDiv);
+        x += zoneWidth + 5;
+    }
+}
+
 let getMinElevation = function (idsWithElevation, targetIds) {
     let minElevation = Number.POSITIVE_INFINITY;
 
@@ -60,14 +90,13 @@ let assignZones = function (modelDict) {
         if (!adjacencyList[startNodeId]) adjacencyList[startNodeId] = [];
         if (!adjacencyList[endNodeId]) adjacencyList[endNodeId] = [];
         adjacencyList[startNodeId].push(endNodeId);
-        adjacencyList[endNodeId].push(startNodeId); // Assuming pipes are bidirectional
+        adjacencyList[endNodeId].push(startNodeId);
     });
 
     // Initialize visited nodes and result array
     const visited = {};
     const groups = [];
 
-    // Define DFS function
     function dfs(node, group) {
         visited[node] = true;
         group.push(node);
@@ -103,7 +132,6 @@ let assignZones = function (modelDict) {
         counter++;
     });
 
-    debugger
     return zones;
 }
 
@@ -233,5 +261,6 @@ let  createModelDict = function (inputText) {
 export {
     createModelDict,
     getMinMax,
-    assignZones
+    assignZones,
+    drawZones
 };

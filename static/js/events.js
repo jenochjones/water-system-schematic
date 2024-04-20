@@ -1,4 +1,4 @@
-import { createModelDict, getMinMax, assignZones } from "./schematic.js";
+import { createModelDict, getMinMax, assignZones, drawZones } from "./schematic.js";
 import { setModelDict, setMaxElev, setMinElev, getMaxElev, getMinElev } from "./variables.js";
 import { drawElevLines, handleFileUpload } from "./htmlElements.js"
 
@@ -72,7 +72,8 @@ let setEventListeners = function () {
         setMaxElev(maxMin[0]);
         setMinElev(maxMin[1]);
         drawElevLines(maxMin[0], maxMin[1]);
-        assignZones(modelDict);
+        let zones = assignZones(modelDict);
+        drawZones(zones);
     });
 
     document.getElementById('printBtn').addEventListener("click", (event) => {
