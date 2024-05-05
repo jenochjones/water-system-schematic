@@ -1,4 +1,79 @@
-import {getMaxElev, getMinElev} from "./variables.js"
+import {getMaxElev, getMinElev, setElevInt, setLocInt, getModelDict } from "./variables.js"
+import { makeDraggable } from "./events.js";
+
+let drawTanks = function () {
+    const modelDict = getModelDict();
+    const tanks = modelDict['TANKS'].data;
+
+    const pageMaxElev = getMaxElev();
+    const pageMinElev = getMinElev();
+
+    let x = 10;
+
+    for (let tank in tanks) {
+        console.log(tank[0]);
+        let elev = tanks[tank][1];
+        let tankDiv = document.createElement('div');
+        let tankTop = document.createElement('div');
+        let tankBottom = document.createElement('div');
+        let mainWindow = document.getElementById('main-window');
+
+        tankDiv.classList.add('tank-div');
+        tankDiv.style.position = 'absolute';
+        tankDiv.style.bottom = `${2 + (elev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        tankDiv.style.left = `${x}%`;
+        tankTop.classList.add('tank-top');
+        tankBottom.classList.add('tank-bottom');
+        tankDiv.appendChild(tankBottom);
+        tankDiv.appendChild(tankTop);
+        mainWindow.appendChild(tankDiv);
+        
+        x += 10;
+    }
+
+    let tankDivs = document.getElementsByClassName('tank-div');
+
+    tankDivs = Array.from(tankDivs);
+    debugger
+    tankDivs.forEach(tdiv => {
+        makeDraggable(tdiv);
+    });
+}
+
+let drawZones = function (zones) {
+    
+    let numZones = Object.keys(zones).length;
+
+    const pageMaxElev = getMaxElev();
+    const pageMinElev = getMinElev();
+
+    let zoneWidth = 100 / numZones - 5;
+    let x = 2.5;
+
+    const mainWindow = document.getElementById('main-window');
+
+    for (let zone in zones) {
+        let maxElev = zones[zone]['MaxElev'];
+        let minElev = zones[zone]['MinElev'];
+
+        console.log(`${zone}: ${maxElev}, ${minElev}`);
+
+        const newDiv = document.createElement('div');
+
+        // Set class and inline styles
+        newDiv.classList.add('zone');
+        newDiv.style.left = `${x}%`;
+        newDiv.style.bottom = `${2 + (minElev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        newDiv.style.top = `${2 + (maxElev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        newDiv.style.width = `${zoneWidth}%`;
+
+        // Set innerHTML to zone
+        newDiv.textContent = zone;
+
+        mainWindow.appendChild(newDiv);
+        x += zoneWidth + 5;
+    }
+}
 
 let handleFileUpload = function (event) {
     let input = document.createElement('input');
@@ -28,8 +103,6 @@ let handleFileUpload = function (event) {
 let drawElevLines = function () {
     const maxElev = getMaxElev();
     const minElev = getMinElev();
-    console.log(minElev);
-    console.log(maxElev);
     const maxElevRound = Math.ceil(maxElev / 10) * 10;
     const minElevRound = Math.floor(minElev / 10) * 10;
     const elevDiff = maxElevRound - minElevRound;
@@ -39,6 +112,9 @@ let drawElevLines = function () {
 
     let elevationsDiv = document.getElementById('elevations');
     let mainWindowDiv = document.getElementById('main-window');
+
+    setElevInt(elevInt);
+    setLocInt(locInt);
 
     while (elevationsDiv.firstChild) {
         elevationsDiv.removeChild(elevationsDiv.firstChild);
@@ -77,5 +153,7 @@ let drawElevLines = function () {
 
 export {
     drawElevLines,
+    drawZones,
+    drawTanks,
     handleFileUpload
 }

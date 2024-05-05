@@ -1,33 +1,3 @@
-let drawZones = function (zones) {
-    debugger
-    let numZones = Object.keys(zones).length;
-    let zoneWidth = 100 / numZones - 5;
-    let zoneHeight = 80;
-    let x = 2.5;
-
-    const mainWindow = document.getElementById('main-window');
-
-    for (let zone in zones) {
-        console.log(zone);
-        //let html = `<div class='zone' style='left: ${x}%; bottom: 10%; width: ${zoneWidth}; height: ${zoneHeight}'>${zone}</div>`;
-        
-        const newDiv = document.createElement('div');
-
-        // Set class and inline styles
-        newDiv.classList.add('zone');
-        newDiv.style.left = `${x}%`;
-        newDiv.style.bottom = '10%';
-        newDiv.style.width = `${zoneWidth}%`;
-        newDiv.style.height = `${zoneHeight}%`;
-
-        // Set innerHTML to zone
-        newDiv.textContent = zone;
-
-        mainWindow.appendChild(newDiv);
-        x += zoneWidth + 5;
-    }
-}
-
 let getMinElevation = function (idsWithElevation, targetIds) {
     let minElevation = Number.POSITIVE_INFINITY;
 
@@ -83,6 +53,8 @@ let assignZones = function (modelDict) {
     let zones = {};
 
     const adjacencyList = {};
+    
+    const numOfZones = document.getElementById('num-zones').value;
 
     // Populate adjacency list
     pipes.forEach(pipe => {
@@ -134,32 +106,6 @@ let assignZones = function (modelDict) {
 
     return zones;
 }
-
-/*
-let assignZones = function (modelDict) {
-    console.log(modelDict)
-    debugger
-    const tankData = modelDict['TANKS'].data;
-    const tankHeads = tankData.map(row => parseFloat(row[1]) + parseFloat(row[2]));
-    const tankIDS = tankData.map(row => row[0]);
-
-    const valveData = modelDict['VALVES'].data;
-    const junctData = modelDict['JUNCTIONS'].data;
-    const resData = modelDict['RESERVOIRS'].data;
-
-    const junctIDS = junctData.map(row => row[0]);
-    const junctElevs = junctData.map(row => row[1]);
-    const valveIDS = valveData.map(row => row[0]);
-    const valveElev = valveData.map(row => (parseFloat(junctElevs[junctIDS.indexOf(row[1])]) + parseFloat(junctElevs[junctIDS.indexOf(row[1])])) / 2);
-    debugger
-    const valveHeads = valveData.map(row => (row[4] === "PRV") ? parseFloat(valveElev[valveIDS.indexOf(row[0])]) + parseFloat(row[5]) * 2.31 : null);
-
-    const resIDS = resData.map(row => row[0]);
-    const resHeads = resData.map(row => parseFloat(row[1]));
-
-    const IDS = [...tankIDS.map(row => `tank_${row}`), ...resIDS.map(row => `res_${row}`), ...valveIDS.map(row => `valve_${row}`)]
-    const heads = [...tankHeads, ...resHeads, ...valveHeads];
-}*/
 
 let getMinMax = function (modelDict) {
 
@@ -261,6 +207,5 @@ let  createModelDict = function (inputText) {
 export {
     createModelDict,
     getMinMax,
-    assignZones,
-    drawZones
+    assignZones
 };

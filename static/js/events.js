@@ -1,6 +1,6 @@
-import { createModelDict, getMinMax, assignZones, drawZones } from "./schematic.js";
+import { createModelDict, getMinMax, assignZones } from "./schematic.js";
 import { setModelDict, setMaxElev, setMinElev, getMaxElev, getMinElev } from "./variables.js";
-import { drawElevLines, handleFileUpload } from "./htmlElements.js"
+import { drawElevLines, drawZones, drawTanks, handleFileUpload } from "./htmlElements.js"
 
 let handleFile = function () {
     return new Promise((resolve, reject) => {
@@ -62,6 +62,46 @@ let printDiv = function (divId) {
     printWindow.document.body.style.padding = '0';
 }
 
+let makeDraggable = function(element) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    element.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // Call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // Calculate new position as a percentage:
+        let containerWidth = element.parentNode.clientWidth;
+        let containerHeight = element.parentNode.clientHeight;
+        let newX = ((element.offsetLeft - pos1) / containerWidth) * 100;
+        let newY = ((element.offsetTop - pos2) / containerHeight) * 100;
+        // Set the element's new position:
+        element.style.top = newY + "%";
+        element.style.left = newX + "%";
+    }
+
+    function closeDragElement() {
+        // Stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}
+
 
 let setEventListeners = function () {
     document.getElementById('fileInput').addEventListener('change', async (event) => {
@@ -74,6 +114,7 @@ let setEventListeners = function () {
         drawElevLines(maxMin[0], maxMin[1]);
         let zones = assignZones(modelDict);
         drawZones(zones);
+        drawTanks();
     });
 
     document.getElementById('printBtn').addEventListener("click", (event) => {
@@ -90,5 +131,6 @@ let setEventListeners = function () {
 }
 
 export {
-    setEventListeners
+    setEventListeners,
+    makeDraggable
 };
