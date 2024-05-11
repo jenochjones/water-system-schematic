@@ -206,3 +206,10 @@ input[type="file"] {
     border-style: solid;
     border-color: black;
 }
+
+.pump-bottom {
+    width: 1em;
+    height: 2em;
+    position: absolute;
+    background-color: #1de8ff;
+}

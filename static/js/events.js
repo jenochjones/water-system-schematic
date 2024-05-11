@@ -1,6 +1,6 @@
 import { createModelDict, getMinMax, assignZones } from "./schematic.js";
 import { setModelDict, setMaxElev, setMinElev, getMaxElev, getMinElev } from "./variables.js";
-import { drawElevLines, drawZones, drawTanks, handleFileUpload } from "./htmlElements.js"
+import { drawElevLines, drawZones, drawTanks, drawPumps, handleFileUpload } from "./htmlElements.js"
 
 let handleFile = function () {
     return new Promise((resolve, reject) => {
@@ -63,15 +63,14 @@ let printDiv = function (divId) {
 }
 
 let makeDraggable = function(element) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let pos1 = 0, pos3 = 0;
     element.onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
         // Get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        pos1 = e.clientX;
         document.onmouseup = closeDragElement;
         // Call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
@@ -81,18 +80,15 @@ let makeDraggable = function(element) {
         e = e || window.event;
         e.preventDefault();
         // Calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        let newX = pos1 - e.clientX;
+        pos1 = e.clientX;
         // Calculate new position as a percentage:
         let containerWidth = element.parentNode.clientWidth;
-        let containerHeight = element.parentNode.clientHeight;
-        let newX = ((element.offsetLeft - pos1) / containerWidth) * 100;
-        let newY = ((element.offsetTop - pos2) / containerHeight) * 100;
+        let newPosition = ((element.offsetLeft - newX) / containerWidth) * 100;
+        // Ensure the element stays within bounds
+        newPosition = Math.max(0, Math.min(newPosition, 100));
         // Set the element's new position:
-        element.style.top = newY + "%";
-        element.style.left = newX + "%";
+        element.style.left = newPosition + "%";
     }
 
     function closeDragElement() {
@@ -101,6 +97,7 @@ let makeDraggable = function(element) {
         document.onmousemove = null;
     }
 }
+
 
 
 let setEventListeners = function () {
@@ -115,6 +112,7 @@ let setEventListeners = function () {
         let zones = assignZones(modelDict);
         drawZones(zones);
         drawTanks();
+        drawPumps();
     });
 
     document.getElementById('printBtn').addEventListener("click", (event) => {

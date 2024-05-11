@@ -1,6 +1,38 @@
 import {getMaxElev, getMinElev, setElevInt, setLocInt, getModelDict } from "./variables.js"
 import { makeDraggable } from "./events.js";
 
+
+let drawPumps = function () {
+    const modelDict = getModelDict();
+    const pumps = modelDict['PUMPS'].data;
+
+    const pageMaxElev = getMaxElev();
+    const pageMinElev = getMinElev();
+
+    let x = 10;
+
+    for (let pump in pumps) {
+        console.log(pump[0]);
+        let elev = pumps[pump][1];
+        let pumpDiv = document.createElement('div');
+        let pumpTop = document.createElement('div');
+        let pumpBottom = document.createElement('div');
+        let mainWindow = document.getElementById('main-window');
+
+        pumpDiv.classList.add('pump-div');
+        pumpDiv.style.position = 'absolute';
+        pumpDiv.style.bottom = `${2 + (elev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        pumpDiv.style.left = `${x}%`;
+        pumpTop.classList.add('pump-top');
+        pumpBottom.classList.add('pump-bottom');
+        pumpDiv.appendChild(pumpBottom);
+        pumpDiv.appendChild(pumpTop);
+        mainWindow.appendChild(pumpDiv);
+        
+        x += 10;
+    }
+}
+
 let drawTanks = function () {
     const modelDict = getModelDict();
     const tanks = modelDict['TANKS'].data;
@@ -155,5 +187,6 @@ export {
     drawElevLines,
     drawZones,
     drawTanks,
+    drawPumps,
     handleFileUpload
 }
