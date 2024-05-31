@@ -2,6 +2,37 @@ import {getMaxElev, getMinElev, setElevInt, setLocInt, getModelDict } from "./va
 import { makeDraggable } from "./events.js";
 
 
+let drawValves = function () {
+    const modelDict = getModelDict();
+    const valves = modelDict['VALVES'].data;
+
+    const pageMaxElev = getMaxElev();
+    const pageMinElev = getMinElev();
+
+    let x = 10;
+
+    for (let valve in valves) {
+        console.log(valve[0]);
+        let elev = valves[valve][1];
+        let valveDiv = document.createElement('div');
+        let valveTop = document.createElement('div');
+        let valveBottom = document.createElement('div');
+        let mainWindow = document.getElementById('main-window');
+
+        valveDiv.classList.add('valve-div');
+        valveDiv.style.position = 'absolute';
+        valveDiv.style.bottom = `${2 + (elev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        valveDiv.style.left = `${x}%`;
+        valveTop.classList.add('valve-top');
+        valveBottom.classList.add('valve-bottom');
+        valveDiv.appendChild(valveBottom);
+        valveDiv.appendChild(valveTop);
+        mainWindow.appendChild(valveDiv);
+        
+        x += 10;
+    }
+}
+
 let drawPumps = function () {
     const modelDict = getModelDict();
     const pumps = modelDict['PUMPS'].data;
@@ -188,5 +219,6 @@ export {
     drawZones,
     drawTanks,
     drawPumps,
+    drawValves,
     handleFileUpload
 }

@@ -207,9 +207,35 @@ input[type="file"] {
     border-color: black;
 }
 
-.pump-bottom {
-    width: 1em;
-    height: 2em;
+.pump-top {
+    width: 1.5em;
+    height: 1.5em;
     position: absolute;
-    background-color: #1de8ff;
+    background-color: #777777;
+    border-radius: 50%;
+}
+
+.pump-bottom {
+    width: 1.2em;
+    height: 0.8em;
+    position: absolute;
+    background-color: #777777;
+    margin-left: -0.5em;
+}
+
+.valve-top {
+    width: 0;
+    height: 0;
+    border-left: 0.5em solid transparent; 
+    border-right: 0.5em solid transparent; 
+    border-bottom: 1em solid rgb(26, 26, 26);
+}
+
+.valve-bottom {
+    width: 0;
+    height: 0;
+    border-left: 0.5em solid transparent; 
+    border-right: 0.5em solid transparent; 
+    border-top: 1em solid rgb(26, 26, 26);
+    margin-bottom: -0.6em;
 }

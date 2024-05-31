@@ -1,6 +1,6 @@
 import { createModelDict, getMinMax, assignZones } from "./schematic.js";
 import { setModelDict, setMaxElev, setMinElev, getMaxElev, getMinElev } from "./variables.js";
-import { drawElevLines, drawZones, drawTanks, drawPumps, handleFileUpload } from "./htmlElements.js"
+import { drawElevLines, drawZones, drawTanks, drawPumps, drawValves, handleFileUpload } from "./htmlElements.js"
 
 let handleFile = function () {
     return new Promise((resolve, reject) => {
@@ -113,6 +113,7 @@ let setEventListeners = function () {
         drawZones(zones);
         drawTanks();
         drawPumps();
+        drawValves();
     });
 
     document.getElementById('printBtn').addEventListener("click", (event) => {
