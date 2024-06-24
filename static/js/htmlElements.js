@@ -10,7 +10,7 @@ let drawValves = function () {
     const pageMinElev = getMinElev();
 
     let x = 10;
-
+    debugger
     for (let valve in valves) {
         console.log(valve[0]);
         let elev = valves[valve][1];
@@ -43,16 +43,24 @@ let drawPumps = function () {
     let x = 10;
 
     for (let pump in pumps) {
-        console.log(pump[0]);
-        let elev = pumps[pump][1];
+        let loc;
+        console.log(pageMinElev);
+        console.log(pumps[pump][4]);
+        let elev = pumps[pump][4];
         let pumpDiv = document.createElement('div');
         let pumpTop = document.createElement('div');
         let pumpBottom = document.createElement('div');
         let mainWindow = document.getElementById('main-window');
 
+        if (elev <= pageMinElev) {
+            loc = 2;
+        } else {
+            loc = 2 + (elev - pageMinElev) * (93) / (pageMaxElev - pageMinElev);
+        }
+
         pumpDiv.classList.add('pump-div');
         pumpDiv.style.position = 'absolute';
-        pumpDiv.style.bottom = `${2 + (elev - pageMinElev) * (93) / (pageMaxElev - pageMinElev)}%`;
+        pumpDiv.style.bottom = `${loc}%`;
         pumpDiv.style.left = `${x}%`;
         pumpTop.classList.add('pump-top');
         pumpBottom.classList.add('pump-bottom');
@@ -97,7 +105,6 @@ let drawTanks = function () {
     let tankDivs = document.getElementsByClassName('tank-div');
 
     tankDivs = Array.from(tankDivs);
-    debugger
     tankDivs.forEach(tdiv => {
         makeDraggable(tdiv);
     });
